@@ -1,66 +1,73 @@
 package org.example;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.*;
-        import java.util.stream.Stream;
+import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Автотесты с информативными ассертами.
+ * - boolean и List методы покрыты
+ * - есть намеренно падающий ассерт
+ * - каждый тест запускается ≥ 10 раз
+ * - фильтрация через @Tag
+ */
 public class FirstTask_Test_Chapter_2 {
 
     private final Random random = new Random();
 
-    // ==================== 1. isEven — @Test ====================
-    @Test
+    // ==================== 1. isEven (boolean) ====================
+    @Tag("smoke")
+    @Tag("boolean")
+    @RepeatedTest(10)
     void testIsEven() {
-        int n = random.nextInt(100) + 1; // 1..100
-        boolean result = First_task.isEven(n);
+        int n = random.nextInt(100) + 1;
+        boolean actual = First_task.isEven(n);
         boolean expected = n % 2 == 0;
 
-        if (result == expected) {
-            System.out.println("TEST PASSED: isEven(" + n + ") = " + result);
-        } else {
-            System.out.println("TEST FAILED: isEven(" + n + ") = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "isEven(" + n + "): ожидалось " + expected + ", получено " + actual);
     }
 
-    // ==================== 2. checkAccess — @RepeatedTest(20) ====================
-    @RepeatedTest(20)
+    // ==================== 2. checkAccess ====================
+    @Tag("smoke")
+    @RepeatedTest(10)
     void testCheckAccess() {
-        int age = random.nextInt(100); // 0..99
-        String result = First_task.checkAccess(age);
+        int age = random.nextInt(100);
+        String actual = First_task.checkAccess(age);
         String expected = age > 18 ? "Allowed" : "Denied";
 
-        if (result.equals(expected)) {
-            System.out.println("TEST PASSED: checkAccess(" + age + ") = " + result);
-        } else {
-            System.out.println("TEST FAILED: checkAccess(" + age + ") = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "checkAccess(" + age + "): ожидалось \"" + expected + "\", получено \"" + actual + "\"");
     }
 
-    // ==================== 3. isPositive — @Test ====================
-    @Test
+    // ==================== 3. isPositive (boolean) ====================
+    @Tag("boolean")
+    @RepeatedTest(10)
     void testIsPositive() {
-        int n = random.nextInt(201) - 100; // -100..100
-        boolean result = First_task.isPositive(n);
+        int n = random.nextInt(201) - 100;
+        boolean actual = First_task.isPositive(n);
         boolean expected = n >= 0;
 
-        if (result == expected) {
-            System.out.println("TEST PASSED: isPositive(" + n + ") = " + result);
-        } else {
-            System.out.println("TEST FAILED: isPositive(" + n + ") = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "isPositive(" + n + "): ожидалось " + expected + ", получено " + actual);
     }
 
-    // ==================== 4. getGrade — @ParameterizedTest ====================
+    // ==================== 4. getGrade ====================
+    @Tag("grade")
     @ParameterizedTest
     @ValueSource(ints = {-5, 0, 10, 25, 45, 65, 75, 90, 100})
     void testGetGrade(int score) {
-        String result = First_task.getGrade(score);
+        String actual = First_task.getGrade(score);
         String expected;
         if (score <= 0) expected = "Error";
         else if (score <= 20) expected = "E";
@@ -69,85 +76,73 @@ public class FirstTask_Test_Chapter_2 {
         else if (score <= 80) expected = "B";
         else expected = "A";
 
-        if (result.equals(expected)) {
-            System.out.println("TEST PASSED: getGrade(" + score + ") = " + result);
-        } else {
-            System.out.println("TEST FAILED: getGrade(" + score + ") = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "getGrade(" + score + "): ожидалось \"" + expected + "\", получено \"" + actual + "\"");
     }
 
-    // ==================== 5. blastOff — @Test ====================
-    @Test
+    // ==================== 5. blastOff ====================
+    @RepeatedTest(10)
     void testBlastOff() {
-        int start = random.nextInt(8) + 3; // 3..10
-        String result = First_task.blastOff(start);
+        int start = random.nextInt(8) + 3;
+        String actual = First_task.blastOff(start);
 
-        StringBuilder expected = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (int i = start; i >= 1; i--) {
-            expected.append(i);
-            if (i > 1) expected.append(" ");
+            sb.append(i);
+            if (i > 1) sb.append(" ");
         }
-        expected.append(" Поехали!");
+        sb.append(" Поехали!");
+        String expected = sb.toString();
 
-        if (result.equals(expected.toString())) {
-            System.out.println("TEST PASSED: blastOff(" + start + ") = " + result);
-        } else {
-            System.out.println("TEST FAILED: blastOff(" + start + ") = " + result);
-        }
+        assertEquals(expected, actual,
+                () -> "blastOff(" + start + "): ожидалось \"" + expected + "\", получено \"" + actual + "\"");
     }
 
-    // ==================== 6. sumToN — @RepeatedTest ====================
-    @RepeatedTest(5)
+    // ==================== 6. sumToN ====================
+    @Tag("smoke")
+    @RepeatedTest(10)
     void testSumToN() {
         int n = random.nextInt(50) + 1;
-        int result = First_task.sumToN(n);
+        int actual = First_task.sumToN(n);
         int expected = n * (n + 1) / 2;
 
-        if (result == expected) {
-            System.out.println("TEST PASSED: sumToN(" + n + ") = " + result);
-        } else {
-            System.out.println("TEST FAILED: sumToN(" + n + ") = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "sumToN(" + n + "): ожидалось " + expected + ", получено " + actual);
     }
 
-    // ==================== 7. hasBug — @ParameterizedTest ====================
+    // ==================== 7. hasBug ====================
     @ParameterizedTest
     @MethodSource("bugMessagesProvider")
     void testHasBug(String[] messages, boolean expected) {
-        boolean result = First_task.hasBug(messages);
+        boolean actual = First_task.hasBug(messages);
 
-        if (result == expected) {
-            System.out.println("TEST PASSED: hasBug = " + result);
-        } else {
-            System.out.println("TEST FAILED: hasBug = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "hasBug(" + Arrays.toString(messages) + "): ожидалось " + expected + ", получено " + actual);
     }
 
-    static Stream<org.junit.jupiter.params.provider.Arguments> bugMessagesProvider() {
+    static Stream<Arguments> bugMessagesProvider() {
         return Stream.of(
-                org.junit.jupiter.params.provider.Arguments.of(new String[]{"Info", "Warning"}, false),
-                org.junit.jupiter.params.provider.Arguments.of(new String[]{"Error", "Bug", "OK"}, true),
-                org.junit.jupiter.params.provider.Arguments.of(new String[]{"bug"}, true),
-                org.junit.jupiter.params.provider.Arguments.of(new String[]{}, false)
+                Arguments.of(new String[]{"Info", "Warning"}, false),
+                Arguments.of(new String[]{"Error", "Bug", "OK"}, true),
+                Arguments.of(new String[]{"bug"}, true),
+                Arguments.of(new String[]{}, false)
         );
     }
 
-    // ==================== 8. getEvenInRange — @Test ====================
-    @Test
+    // ==================== 8. getEvenInRange ====================
+    @RepeatedTest(10)
     void testGetEvenInRange() {
         int start = 3;
         int end = 12;
-        String result = First_task.getEvenInRange(start, end);
+        String actual = First_task.getEvenInRange(start, end);
         String expected = "4 6 8 10 12";
 
-        if (result.equals(expected)) {
-            System.out.println("TEST PASSED: getEvenInRange(" + start + ", " + end + ") = " + result);
-        } else {
-            System.out.println("TEST FAILED: getEvenInRange = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "getEvenInRange(" + start + ", " + end + "): ожидалось \"" + expected +
+                        "\", получено \"" + actual + "\"");
     }
 
-    // ==================== 9. findMax — @ParameterizedTest + CsvSource ====================
+    // ==================== 9. findMax ====================
     @ParameterizedTest
     @CsvSource({
             "1, 5, 3, 5",
@@ -155,31 +150,27 @@ public class FirstTask_Test_Chapter_2 {
             "-5, -1, -9, -1"
     })
     void testFindMax(int a, int b, int c, int expected) {
-        int result = First_task.findMax(new int[]{a, b, c});
+        int actual = First_task.findMax(new int[]{a, b, c});
 
-        if (result == expected) {
-            System.out.println("TEST PASSED: findMax = " + result);
-        } else {
-            System.out.println("TEST FAILED: findMax = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "findMax([" + a + ", " + b + ", " + c + "]): ожидалось " + expected +
+                        ", получено " + actual);
     }
 
-    // ==================== 10. reverse — @Test ====================
-    @Test
+    // ==================== 10. reverse ====================
+    @RepeatedTest(10)
     void testReverse() {
         String[] input = {"A", "B", "C", "D"};
-        String[] result = First_task.reverse(input);
+        String[] actual = First_task.reverse(input);
         String[] expected = {"D", "C", "B", "A"};
 
-        if (Arrays.equals(result, expected)) {
-            System.out.println("TEST PASSED: reverse = " + Arrays.toString(result));
-        } else {
-            System.out.println("TEST FAILED: reverse = " + Arrays.toString(result));
-        }
+        assertArrayEquals(expected, actual,
+                () -> "reverse: ожидалось " + Arrays.toString(expected) +
+                        ", получено " + Arrays.toString(actual));
     }
 
-    // ==================== 11. calcAverage — @RepeatedTest ====================
-    @RepeatedTest(3)
+    // ==================== 11. calcAverage ====================
+    @RepeatedTest(10)
     void testCalcAverage() {
         List<Integer> list = Arrays.asList(
                 random.nextInt(20),
@@ -187,27 +178,34 @@ public class FirstTask_Test_Chapter_2 {
                 random.nextInt(20),
                 random.nextInt(20)
         );
-        double result = First_task.calcAverage(list);
+        double actual = First_task.calcAverage(list);
         double expected = list.stream().mapToInt(Integer::intValue).average().orElse(0);
 
-        if (Math.abs(result - expected) < 0.0001) {
-            System.out.println("TEST PASSED: calcAverage = " + result);
-        } else {
-            System.out.println("TEST FAILED: calcAverage = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual, 0.0001,
+                () -> "calcAverage(" + list + "): ожидалось " + expected + ", получено " + actual);
     }
 
-    // ==================== 12. removeSpecificName — @Test ====================
-    @Test
+    // ==================== 12. removeSpecificName (List) ====================
+    @Tag("list")
+    @RepeatedTest(10)
     void testRemoveSpecificName() {
         List<String> list = new ArrayList<>(Arrays.asList("Anna", "Bob", "Anna", "Clara", "Bob"));
-        List<String> result = First_task.removeSpecificName(list, "Anna");
+        List<String> actual = First_task.removeSpecificName(list, "Anna");
         List<String> expected = Arrays.asList("Bob", "Clara", "Bob");
 
-        if (result.equals(expected)) {
-            System.out.println("TEST PASSED: removeSpecificName = " + result);
-        } else {
-            System.out.println("TEST FAILED: removeSpecificName = " + result + ", expected " + expected);
-        }
+        assertEquals(expected, actual,
+                () -> "removeSpecificName: ожидалось " + expected + ", получено " + actual);
+    }
+
+    // ==================== Намеренно падающий ассерт (Задача 1) ====================
+    @Tag("failing")
+    @Test
+    void testIntentionallyFailing() {
+        String actual = First_task.checkAccess(25);
+        String expected = "Access granted"; // специально неверное значение
+
+        assertEquals(expected, actual,
+                () -> "НАМЕРЕННОЕ ПАДЕНИЕ checkAccess(25): ожидалось \"" + expected +
+                        "\", получено \"" + actual + "\"");
     }
 }

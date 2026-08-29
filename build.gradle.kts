@@ -34,3 +34,33 @@ tasks.register("afterTests") {
         println("Test run is over")
     }
 }
+
+
+val register = tasks.register<Test>("smokeTest") {
+    group = "verification"
+    description = "Запуск только тестов с @Tag(\"smoke\")"
+
+    useJUnitPlatform {
+        includeTags("smoke")
+    }
+
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+
+    testLogging {
+        events("passed", "failed", "standardOut")
+        showStandardStreams = true
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+}
+tasks.test {
+    useJUnitPlatform {
+         includeTags("smoke")
+
+    }
+    testLogging {
+        events("passed", "skipped", "failed", "standardOut", "standardError")
+        showStandardStreams = true
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+}
