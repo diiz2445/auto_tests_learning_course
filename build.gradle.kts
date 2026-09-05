@@ -64,3 +64,21 @@ tasks.test {
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
 }
+
+tasks.register<Test>("failingTest") {
+    group = "verification"
+    description = "Запуск только тестов с @Tag(\"failing\")"
+
+    useJUnitPlatform {
+        includeTags("failing")
+    }
+
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+
+    testLogging {
+        events("passed", "failed", "standardOut", "standardError")
+        showStandardStreams = true
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+}

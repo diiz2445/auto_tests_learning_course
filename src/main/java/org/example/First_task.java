@@ -14,6 +14,10 @@ public class First_task {
     public static String checkAccess(int age) {
         return age > 18 ? "Allowed" : "Denied";
     }
+    // Ошибочный метод
+    public static String failingCheckAccess(int age) {
+        return age > 18 ? "Denied" : "Allowed";
+    }
 
     // Задача 3
     public static boolean isPositive(int n) {
