@@ -175,6 +175,7 @@ public class TestsAfterVebinar {
 
     @Test
     @Tag("VebinarUI")
+    @Tag("testing")
     @DisplayName("3.3 Войти в админку и добавить товар. Проверить уведомление после добавления")
     void addProductInAdminAndCheckNotification() {
         String itemName = "AdminAdd-" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
@@ -186,7 +187,8 @@ public class TestsAfterVebinar {
         $("[id*='price']").setValue(cost);
         $(".card button").click();
 
-        // Уведомление после добавления (часто .alert / toast)
+        // Уведомление после добавления
+        $("#toast-container > div:nth-last-child(1)").shouldBe(text("Заказ принят в обработку!"));
 
     }
 
