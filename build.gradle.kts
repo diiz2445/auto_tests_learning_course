@@ -24,6 +24,14 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.34")
     testCompileOnly("org.projectlombok:lombok:1.18.34")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
+
+    implementation("io.rest-assured:rest-assured:6.0.0")
+    // Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    implementation("org.seleniumhq.selenium:selenium-java:4.49.0")
+    // Source: https://mvnrepository.com/artifact/org.assertj/assertj-core
+    testImplementation("org.assertj:assertj-core:3.27.7")
+    testImplementation("com.codeborne:selenide:7.17.0")
+
 }
 
 tasks.test {
@@ -94,12 +102,12 @@ tasks.register<Test>("failingTest") {
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
 }
-tasks.register<Test>("APITest") {
+tasks.register<Test>("UI") {
     group = "verification"
-    description = "Запуск только тестов с @Tag(\"API\")"
+    description = "Запуск только тестов с @Tag(\"UI\")"
 
     useJUnitPlatform {
-        includeTags("API")
+        includeTags("UI")
     }
 
     testClassesDirs = sourceSets["test"].output.classesDirs
@@ -111,12 +119,29 @@ tasks.register<Test>("APITest") {
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
 }
-tasks.register<Test>("TESTs") {
+tasks.register<Test>("VebinarUI") {
     group = "verification"
-    description = "Запуск только тестов с @Tag(\"API\")"
+    description = "Запуск только тестов с @Tag(\"VebinarUI\")"
 
     useJUnitPlatform {
-        includeTags("TEST")
+        includeTags("VebinarUI")
+    }
+
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+
+    testLogging {
+        events("passed", "failed", "standardOut", "standardError")
+        showStandardStreams = true
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+}
+tasks.register<Test>("Testing") {
+    group = "verification"
+    description = "Запуск только тестов с @Tag(\"UI\")"
+
+    useJUnitPlatform {
+        includeTags("testing")
     }
 
     testClassesDirs = sourceSets["test"].output.classesDirs
