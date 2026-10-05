@@ -90,7 +90,6 @@ public class TestsAfterVebinar {
 
     @Test
     @Tag("VebinarUI")
-    @Tag("testing")
     @DisplayName("3.1 Добавить три единицы товара в корзину и оплатить (сумма ≤ 300). Проверить уведомление об обработке заказа")
     void addThreeUnitsAndPay() {
         // Arrange: товар с ценой ≤ 100, чтобы 3 шт. ≤ 300
@@ -188,7 +187,7 @@ public class TestsAfterVebinar {
         $(".card button").click();
 
         // Уведомление после добавления
-        $("#toast-container > div:nth-last-child(1)").shouldBe(text("Заказ принят в обработку!"));
+        $("#toast-container > div").shouldBe(text("Товар успешно добавлен!"));
 
     }
 
