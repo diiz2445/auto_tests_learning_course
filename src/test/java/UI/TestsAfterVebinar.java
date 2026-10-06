@@ -90,7 +90,6 @@ public class TestsAfterVebinar {
 
     @Test
     @Tag("VebinarUI")
-    @Tag("testing")
     @DisplayName("3.1 Добавить три единицы товара в корзину и оплатить (сумма ≤ 300). Проверить уведомление об обработке заказа")
     void addThreeUnitsAndPay() {
         // Arrange: товар с ценой ≤ 100, чтобы 3 шт. ≤ 300
@@ -175,6 +174,7 @@ public class TestsAfterVebinar {
 
     @Test
     @Tag("VebinarUI")
+    @Tag("testing")
     @DisplayName("3.3 Войти в админку и добавить товар. Проверить уведомление после добавления")
     void addProductInAdminAndCheckNotification() {
         String itemName = "AdminAdd-" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
@@ -186,7 +186,8 @@ public class TestsAfterVebinar {
         $("[id*='price']").setValue(cost);
         $(".card button").click();
 
-        // Уведомление после добавления (часто .alert / toast)
+        // Уведомление после добавления
+        $("#toast-container > div").shouldBe(text("Товар успешно добавлен!"));
 
     }
 
