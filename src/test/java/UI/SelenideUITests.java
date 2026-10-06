@@ -1,7 +1,11 @@
 package UI;
 
+import api.GoodsApiAllCodeResponseTest;
 import com.codeborne.selenide.*;
 import org.junit.jupiter.api.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static api.assertion.ProductAssert.assertThat;
 
 import java.util.Random;
 import java.util.UUID;
@@ -28,7 +32,7 @@ public class SelenideUITests {
     @BeforeEach
     void setUp() {
         Configuration.browser = "chrome";
-        Configuration.browserSize = "1920x1080";
+        Configuration.browserSize = "1600x900";
         Configuration.timeout = 3000; // 3 секунды ожидания по умолчанию
 
         open(BASE_URI + ":" + PORT);
@@ -122,6 +126,7 @@ public class SelenideUITests {
         SelenideElement itemCard = $("#products-list > div").shouldBe(visible);
         String name = itemCard.getAttribute("data-name");
 
+        refresh();
         // Добавляем в корзину
         $("#products-list > div button").click();
 
@@ -142,5 +147,66 @@ public class SelenideUITests {
         // Удаляем товар из корзины
         $x("//*[@class=\"cart-item\"]/div/b[text()=\""+name+"\"]/../../button")
                 .click();
+    }
+
+    @Test
+    @Tag("UI")
+    @DisplayName("1.1 Перетащить элемент в корзину с помощью Drag-and-Drop.")
+    void ItemToCartDND() {
+        //создаем айтем для теста
+        GoodsApiAllCodeResponseTest tests = new GoodsApiAllCodeResponseTest();
+        String name = tests.uniqueName("DND-test");
+        long id = tests.createProduct(name,123.0 );
+
+        refresh();
+
+        SelenideElement itemCard = $x("//*[@id=\"products-list\"]/div[@data-name=\""+name+"\"]").shouldBe(visible);
+        SelenideElement CartButton = $("#open-cart-btn").shouldBe(visible);
+
+        actions().clickAndHold(itemCard)
+                .pause(100)
+                .moveToElement(CartButton)
+                .release()
+                .pause(1000)
+                .perform();
+
+        // Открываем корзину
+        $("#open-cart-btn").click();
+
+        // Проверяем, что товар есть в корзине
+        $x("//*[@id=\"cart-items\"]/div/div/b")
+                .shouldHave(text(name));
+
+        // Удаляем товар из корзины
+        $x("//*[@class=\"cart-item\"]/div/b[text()=\""+name+"\"]/../../button")
+                .click();
+    }
+
+    @Test
+    @Tag("UI")
+    @DisplayName("1.2 Удалить добавленный элемент из корзины и проверить, что он там больше не отображается.")
+    void DeleteItemFromCart()
+    {
+        //Добавление айтема в корзину
+        SelenideElement itemCard = $x("//*[@id=\"products-list\"]/div").shouldBe(visible);
+        String name = itemCard.getAttribute("data-name");
+
+        // Добавляем в корзину
+        $x("//*[@id=\"products-list\"]/div/button").click();
+
+        // Открываем корзину
+        $("#open-cart-btn").click();
+        // Проверяем, что модалка корзины открылась
+        $("#cartModal").shouldBe(visible);
+        // Проверяем, что товар есть в корзине
+        $x("//*[@id=\"cart-items\"]/div/div/b")
+                .shouldHave(text(name));
+
+        // Удаляем товар из корзины
+        $x("//*[@class=\"cart-item\"]/div/b[text()=\""+name+"\"]/../../button")
+                .click();
+
+        // Проверяем, что корзина пустая
+        assertThat($$x("//*[@id=\"cart-items\"]/div/div/b").size()).isZero();
     }
 }
