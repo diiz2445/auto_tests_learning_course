@@ -12,6 +12,18 @@ repositories {
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
+    implementation("io.rest-assured:rest-assured:6.0.0")
+    testImplementation("org.assertj:assertj-core:3.27.7")
+
+    // Jackson (для @JsonIgnoreProperties и десериализации)
+    testImplementation("com.fasterxml.jackson.core:jackson-annotations:2.17.2")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+
+    // Lombok
+    compileOnly("org.projectlombok:lombok:1.18.34")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
+    testCompileOnly("org.projectlombok:lombok:1.18.34")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
 
     implementation("io.rest-assured:rest-assured:6.0.0")
     // Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
@@ -63,7 +75,7 @@ val register = tasks.register<Test>("smokeTest") {
 }
 tasks.test {
     useJUnitPlatform {
-         includeTags("smoke")
+        includeTags("smoke")
 
     }
     testLogging {
