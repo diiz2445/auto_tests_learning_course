@@ -6,11 +6,8 @@ import io.restassured.specification.RequestSpecification;
 
 public final class ApiConfig {
 
-    public static final String USERNAME =
-            System.getProperty("api.username", "admin");
-
-    public static final String PASSWORD =
-            System.getProperty("api.password", "secret123");
+    public static final String USERNAME = Config.getUsername();
+    public static final String PASSWORD = Config.getPassword();
 
     /** Флаг: была ли уже выполнена настройка RestAssured. */
     private static boolean configured;
@@ -23,7 +20,7 @@ public final class ApiConfig {
         if (configured) {
             return;
         }
-        // Базовый адрес берём из того же класса Endpoints — ЕДИНАЯ точка правды.
+        // Базовый адрес берём из Config / Endpoints — ЕДИНАЯ точка правды.
         RestAssured.baseURI = Endpoints.getBaseUri();
         RestAssured.port = Endpoints.getPort();
         // Устанавливаем таймауты, чтобы тесты не «висели» бесконечно,
@@ -49,7 +46,7 @@ public final class ApiConfig {
     /**
      * Имя пользователя для Basic Auth.
      *
-     * @return логин из системного свойства {@code api.username}
+     * @return логин из config.properties
      */
     public static String getUsername() {
         return USERNAME;
@@ -58,7 +55,7 @@ public final class ApiConfig {
     /**
      * Пароль для Basic Auth.
      *
-     * @return пароль из системного свойства {@code api.password}
+     * @return пароль из config.properties
      */
     public static String getPassword() {
         return PASSWORD;

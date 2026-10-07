@@ -32,12 +32,12 @@ public class GoodsApiAllCodeResponseTest {
     }
 
     //локальное создание айтема
-    private long createProduct(String name, double price) {
+    public long createProduct(String name, double price) {
         long id = goodsApi.createProductAndReturnId(name, price);
         createdIds.add(id);
         return id;
     }
-    private String uniqueName(String prefix) {
+    public String uniqueName(String prefix) {
         return prefix + "-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 1000);
     }
     //Получение всех айтемов
@@ -261,6 +261,7 @@ public class GoodsApiAllCodeResponseTest {
 
     @Test
     @Tag("API")
+    @Tag("testing")
     @DisplayName("Пагинация: size ограничивает число элементов на странице")
     void paginationLimitsPageSize() {
         // Гарантируем, что в списке есть хотя бы один товар — чтобы тест
