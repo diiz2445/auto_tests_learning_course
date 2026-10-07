@@ -261,7 +261,6 @@ public class GoodsApiAllCodeResponseTest {
 
     @Test
     @Tag("API")
-    @Tag("testing")
     @DisplayName("Пагинация: size ограничивает число элементов на странице")
     void paginationLimitsPageSize() {
         // Гарантируем, что в списке есть хотя бы один товар — чтобы тест

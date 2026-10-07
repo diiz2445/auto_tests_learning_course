@@ -150,7 +150,6 @@ public class TestsAfterVebinar {
             $x("//*[@id=\"products-list\"]/div[@data-name=\""+name+"\"]/button").click();
 
         });
-        screenshot("abc");
 
         $("#open-cart-btn").click();
         $("#cartModal").shouldBe(visible);
