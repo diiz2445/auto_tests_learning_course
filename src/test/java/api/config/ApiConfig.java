@@ -3,6 +3,7 @@ package api.config;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
+import io.qameta.allure.restassured.AllureRestAssured;
 
 public final class ApiConfig {
 
@@ -40,6 +41,7 @@ public final class ApiConfig {
                 .setContentType("application/json")
                 .setAccept("application/json")
                 .setAuth(RestAssured.preemptive().basic(USERNAME, PASSWORD))
+                .addFilter(new AllureRestAssured())
                 .build();
     }
 

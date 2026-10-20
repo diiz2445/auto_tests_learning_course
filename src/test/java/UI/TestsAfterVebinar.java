@@ -13,6 +13,9 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.Step;
+import io.qameta.allure.selenide.AllureSelenide;
 
 public class TestsAfterVebinar {
 
@@ -30,6 +33,14 @@ public class TestsAfterVebinar {
 
     private final Random random = new Random();
 
+    @BeforeAll
+    static void setUpAllure() {
+        SelenideLogger.addListener("AllureSelenide",
+                new AllureSelenide()
+                        .screenshots(true)
+                        .savePageSource(false));
+    }
+
     @BeforeEach
     void setUp() {
         Configuration.browser = "chrome";
@@ -44,6 +55,7 @@ public class TestsAfterVebinar {
         closeWebDriver();
     }
 
+    @Step("Войти в админку")
     private void loginToAdminPage() {
         $("[href='/admin']").click();
         $("#username").setValue(USERNAME);
@@ -208,6 +220,7 @@ public class TestsAfterVebinar {
         // Возврат на витрину
         $("[href='/']").click();
 
+        Selenide.refresh();
         // Проверка, что изменения применились
         $$(".product-card")
                 .findBy(attribute("data-name", newName))

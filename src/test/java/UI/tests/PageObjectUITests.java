@@ -21,6 +21,10 @@ import java.util.UUID;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.Selenide.open;
 import static io.restassured.RestAssured.given;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import io.qameta.allure.Step;
+import io.qameta.allure.restassured.AllureRestAssured;
 
 /**
  * UI-тесты 2.1–2.4 с использованием Page Object и PageAssert.
@@ -35,6 +39,14 @@ public class PageObjectUITests {
 
     private final Random random = new Random();
     private MainPage mainPage;
+
+    @BeforeAll
+    static void setUpAllure() {
+        SelenideLogger.addListener("AllureSelenide",
+                new AllureSelenide()
+                        .screenshots(true)
+                        .savePageSource(false));
+    }
 
     @BeforeEach
     void setUp() {
@@ -53,6 +65,7 @@ public class PageObjectUITests {
     /**
      * Создание товара через API (требование: хотя бы один тест использует API).
      */
+    @Step("Создать товар через API: name={name}, price={price}")
     private void createProductViaApi(String name, double price) {
         RequestSpecification spec = new RequestSpecBuilder()
                 .setBaseUri(BASE_URI)
@@ -63,6 +76,7 @@ public class PageObjectUITests {
                 .build();
 
         given().spec(spec)
+                .filter(new AllureRestAssured())
                 .body("{\"name\": \"" + name + "\", \"price\": " + (int) price + "}")
                 .when()
                 .post("/goods/add")

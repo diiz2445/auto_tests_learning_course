@@ -91,7 +91,7 @@ public class GoodsApiTestFirstTask {
     @Tag("API")
     //@Tag("TEST")
     @DisplayName("Создали товар → он есть в GET /goods/list (RestAssured)")
-    void createProductAndCheckInList() {
+    void createProductAndCheckInList() throws InterruptedException {
         String uniqueName = "Product-RA-" + System.currentTimeMillis();
 
         var builder = new RequestSpecBuilder()
@@ -121,6 +121,7 @@ public class GoodsApiTestFirstTask {
 
         String ResponseItemID = CreationResponse.jsonPath().getString("data.id");
 
+        wait(100);
         // получаем список и проверяем через RestAssured
         var products = given()
                 .when()
@@ -137,7 +138,7 @@ public class GoodsApiTestFirstTask {
     @Tag("API")
     @Tag("TEST")
     @DisplayName("Создали товар → он есть в GET /goods/list (AssertJ)")
-    void createProductAndCheckInListAssertJ() {
+    void createProductAndCheckInListAssertJ() throws InterruptedException {
         String uniqueName = "Product-AJ-" + System.currentTimeMillis();
 
         var builder = new RequestSpecBuilder()
@@ -168,6 +169,7 @@ public class GoodsApiTestFirstTask {
         //Вытащим ID записи
         String ResponseItemID = CreationResponse.jsonPath().getString("data.id");
 
+        wait(100);
         // получаем список и проверяем через AssertJ
         var products = given()
                 .when()

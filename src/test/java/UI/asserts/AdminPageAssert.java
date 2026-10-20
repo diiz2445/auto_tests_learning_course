@@ -1,13 +1,13 @@
 package UI.asserts;
 
 import UI.pages.AdminPage;
+import io.qameta.allure.Step;
 import org.assertj.core.api.AbstractAssert;
 
 import static com.codeborne.selenide.Condition.*;
 
 /**
  * Assert-класс для страницы админки.
- * Проверки уведомлений и видимости элементов.
  */
 public class AdminPageAssert extends AbstractAssert<AdminPageAssert, AdminPage> {
 
@@ -19,25 +19,25 @@ public class AdminPageAssert extends AbstractAssert<AdminPageAssert, AdminPage> 
         return new AdminPageAssert(actual);
     }
 
-    /** Форма добавления товара видна */
+    @Step("UI-проверка: форма добавления товара видна")
     public AdminPageAssert addFormIsVisible() {
         actual.addProductCard.shouldBe(visible);
         return this;
     }
 
-    /** Уведомление об успешном добавлении товара */
+    @Step("UI-проверка: показано уведомление об успешном добавлении товара")
     public AdminPageAssert productAddedNotificationIsShown() {
         actual.lastToast().shouldBe(text("Товар успешно добавлен!"));
         return this;
     }
 
-    /** Элемент виден */
+    @Step("UI-проверка: элемент виден")
     public AdminPageAssert elementIsVisible(com.codeborne.selenide.SelenideElement element) {
         element.shouldBe(visible);
         return this;
     }
 
-    /** Элемент содержит текст */
+    @Step("UI-проверка: элемент содержит текст «{text}»")
     public AdminPageAssert elementContainsText(com.codeborne.selenide.SelenideElement element, String text) {
         element.shouldHave(text(text));
         return this;

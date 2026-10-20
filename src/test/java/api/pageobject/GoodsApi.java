@@ -5,6 +5,7 @@ import api.config.Endpoints;
 import api.model.Product;
 import api.model.ProductRequest;
 import api.model.ResultData;
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
 
 
@@ -26,6 +27,7 @@ public class GoodsApi {
      * @param product данные товара (name обязателен, price >= 0)
      * @return ответ сервера
      */
+    @Step("Бизнес: добавить товар")
     public Response addProduct(ProductRequest product) {
         return request.doPost(Endpoints.GOODS_ADD, product);
     }
@@ -36,6 +38,7 @@ public class GoodsApi {
      * @param id идентификатор товара
      * @return ответ сервера (200 + {@link Product}, либо 404)
      */
+    @Step("Бизнес: получить товар id={id}")
     public Response getProduct(long id) {
         return request.doGet(Endpoints.goodsById(id));
     }
@@ -50,9 +53,11 @@ public class GoodsApi {
      * @param product новые значения полей
      * @return ответ сервера (200 + {@link Product}, либо 400/404)
      */
+    @Step("Бизнес: обновить товар id={id}")
     public Response updateProduct(long id, ProductRequest product) {
         return request.doPatch(Endpoints.goodsById(id), product);
     }
+    @Step("Бизнес: обновить товар (негативный) id={id}")
     public Response updateProductFail(long id, ProductRequest product) {
         return request.doPatch(Endpoints.goodsById(id), product);
     }
@@ -63,11 +68,13 @@ public class GoodsApi {
      * @param id идентификатор товара
      * @return ответ сервера (200 либо 404)
      */
+    @Step("Бизнес: удалить товар id={id}")
     public Response deleteProduct(long id) {
         return request.doDelete(Endpoints.goodsById(id));
     }
 
 
+    @Step("Бизнес: получить список товаров page={page}, size={size}")
     public Response getAllProducts(int page, int size) {
         return request.doGetWithQueryParams(Endpoints.GOODS_LIST, "page", page, "size", size);
     }
@@ -89,6 +96,7 @@ public class GoodsApi {
      * @return id созданного товара
      * @throws IllegalStateException если сервер не вернул id
      */
+    @Step("Бизнес: createProductAndReturnId")
     public Long createProductAndReturnId(String name, double price) {
         Response response = addProduct(new ProductRequest(name, price));
         ResultData result = response.as(ResultData.class);

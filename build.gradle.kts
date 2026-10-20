@@ -1,5 +1,6 @@
 plugins {
     java
+    id("io.qameta.allure") version "4.3.0"
 }
 
 group = "com.example"
@@ -8,6 +9,8 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
 }
+
+val allureVersion = "2.32.0"
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
@@ -32,6 +35,15 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.27.7")
     testImplementation("com.codeborne:selenide:7.17.0")
 
+    // Allure
+    testImplementation(platform("io.qameta.allure:allure-bom:$allureVersion"))
+    testImplementation("io.qameta.allure:allure-junit5")
+    testImplementation("io.qameta.allure:allure-selenide")
+    testImplementation("io.qameta.allure:allure-rest-assured")
+}
+
+allure {
+    version.set(allureVersion)
 }
 
 tasks.test {
@@ -74,15 +86,14 @@ val register = tasks.register<Test>("smokeTest") {
     }
 }
 tasks.test {
-    useJUnitPlatform {
-        includeTags("smoke")
-
-    }
+    useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed", "standardOut", "standardError")
         showStandardStreams = true
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
+    // Allure results directory (plugin also configures this)
+    systemProperty("allure.results.directory", layout.buildDirectory.dir("allure-results").get().asFile.absolutePath)
 }
 
 tasks.register<Test>("failingTest") {

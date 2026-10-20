@@ -1,14 +1,14 @@
 package UI.asserts;
 
 import UI.pages.MainPage;
+import io.qameta.allure.Step;
 import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.Assertions;
 
 import static com.codeborne.selenide.Condition.*;
-import org.assertj.core.api.Assertions;
 
 /**
  * Assert-класс для главной страницы (витрина + корзина).
- * Все проверки сценариев 2.1 / 2.2 организованы здесь.
  */
 public class MainPageAssert extends AbstractAssert<MainPageAssert, MainPage> {
 
@@ -20,31 +20,31 @@ public class MainPageAssert extends AbstractAssert<MainPageAssert, MainPage> {
         return new MainPageAssert(actual);
     }
 
-    /** Элемент виден */
+    @Step("UI-проверка: элемент виден")
     public MainPageAssert elementIsVisible(com.codeborne.selenide.SelenideElement element) {
         element.shouldBe(visible);
         return this;
     }
 
-    /** Текстовое поле / элемент содержит текст */
+    @Step("UI-проверка: элемент содержит текст «{text}»")
     public MainPageAssert elementContainsText(com.codeborne.selenide.SelenideElement element, String text) {
         element.shouldHave(text(text));
         return this;
     }
 
-    /** Корзина открыта */
+    @Step("UI-проверка: корзина открыта")
     public MainPageAssert cartIsOpen() {
         actual.cartModal.shouldBe(visible);
         return this;
     }
 
-    /** В корзине есть товар с указанным именем */
+    @Step("UI-проверка: в корзине есть товар «{productName}»")
     public MainPageAssert cartContainsProduct(String productName) {
         actual.cartItems.shouldHave(text(productName));
         return this;
     }
 
-    /** Итоговая сумма ≤ max */
+    @Step("UI-проверка: итоговая сумма ≤ {max}")
     public MainPageAssert totalPriceIsLessThanOrEqualTo(double max) {
         double total = actual.getTotalPriceValue();
         Assertions.assertThat(total)
@@ -53,7 +53,7 @@ public class MainPageAssert extends AbstractAssert<MainPageAssert, MainPage> {
         return this;
     }
 
-    /** Итоговая сумма равна expected */
+    @Step("UI-проверка: итоговая сумма равна {expected}")
     public MainPageAssert totalPriceIsEqualTo(double expected) {
         double total = actual.getTotalPriceValue();
         Assertions.assertThat(total)
@@ -62,13 +62,13 @@ public class MainPageAssert extends AbstractAssert<MainPageAssert, MainPage> {
         return this;
     }
 
-    /** Уведомление об обработке заказа */
+    @Step("UI-проверка: показано уведомление «Заказ принят в обработку!»")
     public MainPageAssert orderAcceptedNotificationIsShown() {
         actual.lastToast().shouldBe(text("Заказ принят в обработку!"));
         return this;
     }
 
-    /** На витрине отображается товар с заданным именем и ценой */
+    @Step("UI-проверка: на витрине товар «{name}» с ценой {price}")
     public MainPageAssert productIsDisplayed(String name, String price) {
         actual.productCardByName(name)
                 .shouldBe(visible)
@@ -76,7 +76,7 @@ public class MainPageAssert extends AbstractAssert<MainPageAssert, MainPage> {
         return this;
     }
 
-    /** Корзина пуста */
+    @Step("UI-проверка: корзина пуста")
     public MainPageAssert cartIsEmpty() {
         Assertions.assertThat(actual.cartItemElements.size()).isZero();
         return this;

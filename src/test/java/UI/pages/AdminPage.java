@@ -2,42 +2,25 @@ package UI.pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selenide.*;
 
 /**
  * Page Object страницы админки (добавление / редактирование товаров).
- * Нужен для сценариев 2.3 и 2.4.
  */
 public class AdminPage {
 
-    /** Карточка формы добавления товара */
     public final SelenideElement addProductCard = $(".card");
-
-    /** Поле имени нового товара */
     public final SelenideElement nameInput = $("[id*='name']");
-
-    /** Поле цены нового товара */
     public final SelenideElement priceInput = $("[id*='price']");
-
-    /** Кнопка добавления товара */
     public final SelenideElement addButton = $(".card button");
-
-    /** Таблица товаров (tbody) */
     public final SelenideElement productsTableBody = $("#tbody");
-
-    /** Строки таблицы товаров */
     public final ElementsCollection tableRows = $$("#tbody tr");
-
-    /** Ссылка на витрину */
     public final SelenideElement storefrontLink = $("[href='/']");
-
-    /** Контейнер toast-уведомлений */
     public final SelenideElement toastContainer = $("#toast-container");
 
-    /**
-     * Заполнить и отправить форму добавления товара.
-     */
+    @Step("Добавить товар: name={name}, price={price}")
     public AdminPage addProduct(String name, String price) {
         nameInput.setValue(name);
         priceInput.setValue(price);
@@ -45,38 +28,27 @@ public class AdminPage {
         return this;
     }
 
-    /**
-     * Найти строку таблицы по id (первая колонка — id).
-     */
+    @Step("Найти строку таблицы по id={id}")
     public SelenideElement rowById(long id) {
         return $x("//*[@id='tbody']/tr/td[text()=\"" + id + "\"]/..");
-        //*[@id='tbody']/tr/td[text()="38"]/../
     }
 
-    /**
-     * Поле имени в строке с указанным id.
-     */
+    @Step("Поле имени в строке id={id}")
     public SelenideElement nameInputInRow(long id) {
         return rowById(id).$("input[type='text']");
     }
 
-    /**
-     * Поле цены в строке с указанным id.
-     */
+    @Step("Поле цены в строке id={id}")
     public SelenideElement priceInputInRow(long id) {
         return rowById(id).$("input[type='number']");
     }
 
-    /**
-     * Кнопка update в строке.
-     */
+    @Step("Кнопка update в строке id={id}")
     public SelenideElement updateButtonInRow(long id) {
         return rowById(id).$("button[data-action='update']");
     }
 
-    /**
-     * Отредактировать товар с id=1 (или другим) и сохранить.
-     */
+    @Step("Отредактировать товар id={id}: name={newName}, price={newPrice}")
     public AdminPage editProduct(long id, String newName, String newPrice) {
         nameInputInRow(id).setValue(newName);
         priceInputInRow(id).setValue(newPrice);
@@ -84,17 +56,13 @@ public class AdminPage {
         return this;
     }
 
-    /**
-     * Перейти на витрину.
-     */
+    @Step("Перейти на витрину")
     public MainPage goToStorefront() {
         storefrontLink.click();
         return new MainPage();
     }
 
-    /**
-     * Последнее toast-уведомление.
-     */
+    @Step("Получить последнее toast-уведомление")
     public SelenideElement lastToast() {
         return $("#toast-container > div:nth-last-child(1)");
     }

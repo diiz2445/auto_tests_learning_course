@@ -12,6 +12,9 @@ import java.util.UUID;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.Step;
+import io.qameta.allure.selenide.AllureSelenide;
 
 public class SelenideUITests {
 
@@ -28,6 +31,14 @@ public class SelenideUITests {
             Integer.parseInt(System.getProperty("api.port", "8080"));
 
     private final Random random = new Random();
+
+    @BeforeAll
+    static void setUpAllure() {
+        SelenideLogger.addListener("AllureSelenide",
+                new AllureSelenide()
+                        .screenshots(true)
+                        .savePageSource(false));
+    }
 
     @BeforeEach
     void setUp() {
@@ -46,6 +57,7 @@ public class SelenideUITests {
     /**
      * Логин в админку
      */
+    @Step("Войти в админку")
     private void loginToAdminPage() {
         $("[href='/admin']").click();
 

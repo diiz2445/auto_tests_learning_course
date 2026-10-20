@@ -16,6 +16,7 @@ import java.util.Random;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static api.assertion.ProductAssert.assertThat;
+import io.qameta.allure.Step;
 
 public class GoodsApiAllCodeResponseTest {
     // Page Object — единственная «точка входа» в API из тестов.
@@ -32,15 +33,18 @@ public class GoodsApiAllCodeResponseTest {
     }
 
     //локальное создание айтема
+    @Step("API-хелпер: создать товар name={name}, price={price}")
     public long createProduct(String name, double price) {
         long id = goodsApi.createProductAndReturnId(name, price);
         createdIds.add(id);
         return id;
     }
+    @Step("API-хелпер: уникальное имя с префиксом {prefix}")
     public String uniqueName(String prefix) {
         return prefix + "-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 1000);
     }
     //Получение всех айтемов
+    @Step("API-хелпер: получить все товары")
     private List<Product> fetchAllProducts() {
         List<Product> allItems = new ArrayList<>();
         for (int page = 0; ; page++) {
