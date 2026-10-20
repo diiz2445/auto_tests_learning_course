@@ -32,12 +32,12 @@ public class GoodsApiAllCodeResponseTest {
     }
 
     //локальное создание айтема
-    private long createProduct(String name, double price) {
+    public long createProduct(String name, double price) {
         long id = goodsApi.createProductAndReturnId(name, price);
         createdIds.add(id);
         return id;
     }
-    private String uniqueName(String prefix) {
+    public String uniqueName(String prefix) {
         return prefix + "-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 1000);
     }
     //Получение всех айтемов

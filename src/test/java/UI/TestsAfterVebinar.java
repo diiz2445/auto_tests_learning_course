@@ -150,7 +150,6 @@ public class TestsAfterVebinar {
             $x("//*[@id=\"products-list\"]/div[@data-name=\""+name+"\"]/button").click();
 
         });
-        screenshot("abc");
 
         $("#open-cart-btn").click();
         $("#cartModal").shouldBe(visible);
@@ -174,7 +173,6 @@ public class TestsAfterVebinar {
 
     @Test
     @Tag("VebinarUI")
-    @Tag("testing")
     @DisplayName("3.3 Войти в админку и добавить товар. Проверить уведомление после добавления")
     void addProductInAdminAndCheckNotification() {
         String itemName = "AdminAdd-" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
